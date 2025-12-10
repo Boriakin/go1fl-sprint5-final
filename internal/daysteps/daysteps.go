@@ -1,19 +1,14 @@
 package daysteps
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/Yandex-Practicum/tracker/internal/apperrors"
 	"github.com/Yandex-Practicum/tracker/internal/personaldata"
 	"github.com/Yandex-Practicum/tracker/internal/spentenergy"
-)
-
-var (
-	ErrInvalidSteps    = errors.New("steps must be greater than zero")
-	ErrInvalidDuration = errors.New("duration must be greater than zero")
 )
 
 type DaySteps struct {
@@ -33,7 +28,7 @@ func (ds *DaySteps) Parse(data string) (err error) {
 		return err
 	}
 	if ds.Steps <= 0 {
-		return ErrInvalidSteps
+		return apperrors.ErrInvalidSteps
 	}
 
 	ds.Duration, err = time.ParseDuration(parts[1])
@@ -41,7 +36,7 @@ func (ds *DaySteps) Parse(data string) (err error) {
 		return err
 	}
 	if ds.Duration <= 0 {
-		return ErrInvalidDuration
+		return apperrors.ErrInvalidDuration
 	}
 
 	return nil

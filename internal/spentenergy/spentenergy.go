@@ -1,8 +1,9 @@
 package spentenergy
 
 import (
-	"errors"
 	"time"
+
+	"github.com/Yandex-Practicum/tracker/internal/apperrors"
 )
 
 // Основные константы, необходимые для расчетов.
@@ -13,34 +14,26 @@ const (
 	walkingCaloriesCoefficient = 0.5  // коэффициент для расчета калорий при ходьбе.
 )
 
-var (
-	ErrInvalidSteps    = errors.New("steps must be greater than zero")
-	ErrInvalidDuration = errors.New("duration must be greater than zero")
-	ErrInvalidWeight   = errors.New("weight must be greater than zero")
-	ErrInvalidHeight   = errors.New("height must be greater than zero")
-	ErrZeroAvgSpeed    = errors.New("avgspeed is zero")
-)
-
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 {
-		return 0, ErrInvalidSteps
+		return 0, apperrors.ErrInvalidSteps
 	}
 
 	if weight <= 0 {
-		return 0, ErrInvalidWeight
+		return 0, apperrors.ErrInvalidWeight
 	}
 
 	if height <= 0 {
-		return 0, ErrInvalidHeight
+		return 0, apperrors.ErrInvalidHeight
 	}
 
 	if duration <= 0 {
-		return 0, ErrInvalidDuration
+		return 0, apperrors.ErrInvalidDuration
 	}
 
 	avgSpeed := MeanSpeed(steps, height, duration)
 	if avgSpeed == 0 {
-		return 0, ErrZeroAvgSpeed
+		return 0, apperrors.ErrZeroAvgSpeed
 	}
 
 	durationInMin := duration.Minutes()
@@ -52,24 +45,24 @@ func WalkingSpentCalories(steps int, weight, height float64, duration time.Durat
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 {
-		return 0, ErrInvalidSteps
+		return 0, apperrors.ErrInvalidSteps
 	}
 
 	if weight <= 0 {
-		return 0, ErrInvalidWeight
+		return 0, apperrors.ErrInvalidWeight
 	}
 
 	if height <= 0 {
-		return 0, ErrInvalidHeight
+		return 0, apperrors.ErrInvalidHeight
 	}
 
 	if duration <= 0 {
-		return 0, ErrInvalidDuration
+		return 0, apperrors.ErrInvalidDuration
 	}
 
 	avgSpeed := MeanSpeed(steps, height, duration)
 	if avgSpeed == 0 {
-		return 0, ErrZeroAvgSpeed
+		return 0, apperrors.ErrZeroAvgSpeed
 	}
 
 	durationInMin := duration.Minutes()

@@ -1,21 +1,14 @@
 package trainings
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/Yandex-Practicum/tracker/internal/apperrors"
 	"github.com/Yandex-Practicum/tracker/internal/personaldata"
 	"github.com/Yandex-Practicum/tracker/internal/spentenergy"
-)
-
-var (
-	ErrInvalidSteps    = errors.New("steps must be greater than zero")
-	ErrInvalidDuration = errors.New("duration must be greater than zero")
-	ErrZeroAvgSpeed    = errors.New("avgspeed is zero")
-	ErrInvalidTraining = errors.New("неизвестный тип тренировки")
 )
 
 type Training struct {
@@ -36,7 +29,7 @@ func (t *Training) Parse(data string) (err error) {
 		return err
 	}
 	if t.Steps <= 0 {
-		return ErrInvalidSteps
+		return apperrors.ErrInvalidSteps
 	}
 
 	t.TrainingType = parts[1]
@@ -46,7 +39,7 @@ func (t *Training) Parse(data string) (err error) {
 		return err
 	}
 	if t.Duration <= 0 {
-		return ErrInvalidDuration
+		return apperrors.ErrInvalidDuration
 	}
 
 	return nil
@@ -62,7 +55,7 @@ func (t *Training) ActionInfo() (string, error) {
 
 	avgSpeed := spentenergy.MeanSpeed(t.Steps, t.Height, t.Duration)
 	if avgSpeed == 0 {
-		return "", ErrZeroAvgSpeed
+		return "", apperrors.ErrZeroAvgSpeed
 	}
 
 	info := fmt.Sprintf("Тип тренировки: %s\n"+
@@ -84,6 +77,6 @@ func (t *Training) calcCalories() (float64, error) {
 		return spentenergy.WalkingSpentCalories(t.Steps, t.Weight, t.Height, t.Duration)
 
 	default:
-		return 0, ErrInvalidTraining
+		return 0, apperrors.ErrInvalidTraining
 	}
 }
